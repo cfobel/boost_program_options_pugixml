@@ -23,8 +23,7 @@ namespace boost { namespace program_options {
         return attrs;
     }
 
-    basic_parsed_options<char>
-    parse_xml_attrs(const options_description& desc, pugi::xml_node const &node) {
+    set<string> get_allowed_options(const options_description& desc) {
         using boost::shared_ptr;
         set<string> allowed_options;
 
@@ -38,6 +37,12 @@ namespace boost { namespace program_options {
 
             allowed_options.insert(d.long_name());
         }
+        return allowed_options;
+    }
+
+    basic_parsed_options<char>
+    parse_xml_attrs(const options_description& desc, pugi::xml_node const &node) {
+        set<string> allowed_options = get_allowed_options(desc);
 
         // Parser return char strings
         parsed_options result(&desc);
