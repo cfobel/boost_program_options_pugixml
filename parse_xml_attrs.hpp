@@ -12,7 +12,7 @@ using namespace boost::program_options;
 namespace boost { namespace program_options {
     typedef map<string, string> attrs_t;
 
-    const attrs_t get_node_attributes(pugi::xml_node const &node) {
+    inline const attrs_t get_node_attributes(pugi::xml_node const &node) {
         attrs_t attrs;
 
         pugi::xml_node::attribute_iterator b = node.attributes_begin();
@@ -23,7 +23,7 @@ namespace boost { namespace program_options {
         return attrs;
     }
 
-    set<string> get_allowed_options(const options_description& desc) {
+    inline set<string> get_allowed_options(const options_description& desc) {
         using boost::shared_ptr;
         set<string> allowed_options;
 
@@ -40,14 +40,15 @@ namespace boost { namespace program_options {
         return allowed_options;
     }
 
-    basic_parsed_options<char>
-    parse_xml_attrs(const options_description& desc, pugi::xml_node const &node) {
+    inline basic_parsed_options<char>
+    parse_xml_attrs(const options_description& desc, pugi::xml_node const &node, bool allow_unregistered=true) {
         set<string> allowed_options = get_allowed_options(desc);
 
         // Parser return char strings
         parsed_options result(&desc);
         const attrs_t attrs = get_node_attributes(node);
         BOOST_FOREACH(attrs_t::value_type const &item, attrs) {
+            if(allow_unregistered && allowed_options.count(item.first) == 0) continue;
             result.options.push_back(basic_option<char>(item.first, vector<string>(1, item.second)));
         }
         return basic_parsed_options<char>(result);
