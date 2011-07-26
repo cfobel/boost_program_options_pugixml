@@ -1,1 +1,1 @@
-Program(['example.cpp', Glob('pugixml/pugixml.cpp')], LIBS=['boost_program_options'])
+Program(['example.cpp', 'pugixml/pugixml.cpp', 'parse_xml_attrs.cpp'], LIBS=['boost_program_options'])
